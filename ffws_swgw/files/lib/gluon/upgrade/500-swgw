@@ -1,0 +1,5 @@
+#!/usr/bin/lua
+
+local f = io.open('/usr/lib/micron.d/swgw', 'w')
+f:write(string.format('*/5 * * * * /lib/gluon/ffws-swgw/gw.sh\n'))
+f:close()
