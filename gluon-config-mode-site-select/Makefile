@@ -1,8 +1,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gluon-config-mode-site-select
-PKG_VERSION:=0.1
+PKG_VERSION:=0.2
 PKG_RELEASE:=1
+
+PKG_BUILD_DEPENDS := lua-cjson/host
 
 PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
 
@@ -31,7 +33,12 @@ define Package/gluon-config-mode-site-select/install
 	mkdir -p $(1)/etc/config/
 	mkdir -p $(1)/lib/gluon/site-select/
 	$(CP) ./files/* $(1)/
-	$(CP) $(GLUON_SITEDIR)/extra/* $(1)/lib/gluon/site-select/
+
+	lua -e 'print(require("cjson").encode(assert(loadfile("site_config.lua")("$(GLUON_SITEDIR)/extra/ffws.conf"))))' > $(1)/lib/gluon/site-select/ffws.json
+	lua -e 'print(require("cjson").encode(assert(loadfile("site_config.lua")("$(GLUON_SITEDIR)/extra/ffwy.conf"))))' > $(1)/lib/gluon/site-select/ffwy.json
+	lua -e 'print(require("cjson").encode(assert(loadfile("site_config.lua")("$(GLUON_SITEDIR)/extra/ffvpconf"))))' > $(1)/lib/gluon/site-select/ffvp.json
+	lua -e 'print(require("cjson").encode(assert(loadfile("site_config.lua")("$(GLUON_SITEDIR)/extra/ffaw.conf"))))' > $(1)/lib/gluon/site-select/ffaw.json
+	lua -e 'print(require("cjson").encode(assert(loadfile("site_config.lua")("$(GLUON_SITEDIR)/extra/ffsl.conf"))))' > $(1)/lib/gluon/site-select/ffsl.json
 	DIR=$(1) sh create-config.sh
 	
 	$(call GluonInstallI18N,gluon-config-mode-site-select,$(1))
